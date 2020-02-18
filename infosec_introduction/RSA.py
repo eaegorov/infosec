@@ -14,6 +14,7 @@ def GCD(a, b):
     return a
 
 
+# Find n-1 for Miller-Rabben algo
 def find_n_minus_1(n):
     s = 0
     d = n - 1
@@ -25,7 +26,7 @@ def find_n_minus_1(n):
     return s, d
 
 
-# Algorithm
+# Miller-Rabben algorithm
 def miller_rabben(n):
     r = int(math.log2(n))  # Number of checks
     s, d = find_n_minus_1(n)

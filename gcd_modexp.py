@@ -12,6 +12,7 @@ def to_bin(x):
     return res
 
 
+# Fast modular exponentiation
 def fast_pow(a, b, n):
     b = to_bin(b)
     a_numbers = [a]
@@ -24,6 +25,7 @@ def fast_pow(a, b, n):
     return a_numbers[-1]
 
 
+# Extended GCD
 def gcd_ext(a, b):
     if b == 0:
         return a, 1, 0

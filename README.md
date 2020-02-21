@@ -11,7 +11,7 @@ Intoduction to Information security:
 
 
 Cryptography:
-1. Registration and authentication method «Challenge-response authentication» with SQLite datababe
+1. Registration and authentication method «Challenge-response authentication» with SQLite database
 2. Solovay-Strassen test
 3. Diffie–Hellman protocol
 4. RC4

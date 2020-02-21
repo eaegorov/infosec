@@ -82,17 +82,17 @@ def solovay_strassen(n):
 
 # Factorization
 def factor(n):
-    ans = []
-    d = 2
-    while d * d <= n:
-        if n % d == 0:
-            ans.append(d)
-            n //= d
-        else:
-            d += 1
-    if n > 1:
-        ans.append(n)
-    return ans
+   ans = []
+   d = 2
+   while d * d <= n:
+       if n % d == 0:
+           ans.append(d)
+           n //= d
+       else:
+           d += 1
+   if n > 1:
+       ans.append(n)
+   return ans
 
 
 # Public key and primitive element generation
@@ -106,12 +106,12 @@ def public_keygen(bit_length):
         last_digit = temp % 10
         if last_digit % 2 != 0:
             ans = solovay_strassen(temp)
-            if ans:
+            if ans and solovay_strassen((temp - 1) // 2):  # Last condition for security improvement (and solovay_strassen((temp - 1) // 2))
                 p = temp
                 break
 
     # Finding primitive element of a finite filed p
-    print(datetime.datetime.now())
+    start_time = datetime.datetime.now()
     prime_factors = factor(p - 1)
     for a in range(2, p):
         check = True
@@ -124,7 +124,6 @@ def public_keygen(bit_length):
             g = a
             break
 
-    # Will be deleted soon
 
     # for a in range(2, p):
     #     check = True
@@ -139,7 +138,9 @@ def public_keygen(bit_length):
     #         g = a
     #         break
 
-    print(datetime.datetime.now())
+    end_time = datetime.datetime.now()
+    delta = (end_time - start_time).seconds
+    print(delta)
     return p, g
 
 
@@ -153,11 +154,10 @@ def private_keygen(p, g):
     userA_key = fast_pow(y, a, p)
     userB_key = fast_pow(x, b, p)
 
-    return
+    return userA_key if userA_key == userB_key else "error"
 
 
 if __name__ == '__main__':
     bit_length = 64
     p, g = public_keygen(bit_length)
-    private_keygen(p, g)
-
+    k = private_keygen(p, g)

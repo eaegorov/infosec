@@ -11,7 +11,7 @@ def polard(n):
     y = 1
     i = 0
     stage = 2
-    while GDC(n, abs(x - y)) == 1:
+    while GCD(n, abs(x - y)) == 1:
         if i == stage:
             y = x
             stage *= 2
@@ -19,7 +19,7 @@ def polard(n):
         x = (x ** 2 + 1) % n
         i += 1
 
-    return GDC(n, abs(x - y))
+    return GCD(n, abs(x - y))
 
 
 #16 - 47

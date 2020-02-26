@@ -2,6 +2,7 @@ from tkinter import *
 import math
 import random
 import datetime
+import time
 
 
 # Binary converting
@@ -106,12 +107,12 @@ def public_keygen(bit_length):
         last_digit = temp % 10
         if last_digit % 2 != 0:
             ans = solovay_strassen(temp)
-            if ans and solovay_strassen((temp - 1) // 2):  # Last condition for security improvement (and solovay_strassen((temp - 1) // 2))
+            if ans:  # Last condition for security improvement (and solovay_strassen((temp - 1) // 2))
                 p = temp
                 break
 
-    # Finding primitive element of a finite filed p
-    start_time = datetime.datetime.now()
+    # Finding primitive element of a finite filed GF(p)
+    start_time = time.process_time()
     prime_factors = factor(p - 1)
     for a in range(2, p):
         check = True
@@ -124,23 +125,9 @@ def public_keygen(bit_length):
             g = a
             break
 
-
-    # for a in range(2, p):
-    #     check = True
-    #     for k in range(1, p):
-    #         t = fast_pow(a, k, p)
-    #         exponenta = math.log(t, a)
-    #         if a ** exponenta != t:
-    #             check = False
-    #             break
-    #
-    #     if check:
-    #         g = a
-    #         break
-
-    end_time = datetime.datetime.now()
-    delta = (end_time - start_time).seconds
+    delta = time.process_time() - start_time
     print(delta)
+    print(g)
     return p, g
 
 

@@ -1,8 +1,8 @@
 from tkinter import *
 import math
 import random
-import datetime
 import time
+import numpy as np
 
 
 # Binary converting
@@ -113,7 +113,7 @@ def public_keygen(bit_length):
 
     # Finding primitive element of a finite filed GF(p)
     start_time = time.process_time()
-    prime_factors = factor(p - 1)
+    prime_factors = np.unique(factor(p - 1))
     for a in range(2, p):
         check = True
         for q in prime_factors:

@@ -5,30 +5,18 @@ import time
 import numpy as np
 
 
-# Binary converting
-def to_bin(x):
-    if x == 0:
-        return '0'
-    res = ''
-    while x > 0:
-        res = ('0' if x % 2 == 0 else '1') + res
-        x //= 2
-    return res
-
-
 # GCD (Euclid)
 def GCD(a, b):
     while b:
         t = a % b
         a = b
         b = t
-
     return a
 
 
 # Fast modular exponentiation
 def fast_pow(a, b, n):
-    b = to_bin(b)
+    b = bin(b)[2:]  # To binary representation converting
     a_numbers = [a]
     for i in range(1, len(b)):
         if b[i] == '0':

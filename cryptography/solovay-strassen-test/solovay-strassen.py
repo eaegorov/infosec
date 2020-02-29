@@ -2,6 +2,17 @@ from tkinter import *
 import random
 
 
+# To binary representation converting
+def to_bin(x):
+    if x == 0:
+        return '0'
+    res = ''
+    while x > 0:
+        res = ('0' if x % 2 == 0 else '1') + res
+        x //= 2
+    return res
+
+
 # GCD (Euclid algorithm)
 def GCD(a, b):
     while b:
@@ -13,7 +24,7 @@ def GCD(a, b):
 
 # Fast modular exponentiation
 def fast_pow(a, b, n):
-    b = bin(b)[2:]  # To binary representation converting
+    b = to_bin(b)
     a_numbers = [a]
     for i in range(1, len(b)):
         if b[i] == '0':
@@ -53,7 +64,7 @@ def jacobi_symbol(a, b):
         return r
 
 
-# Solovay_Strassen Algorithm
+# Solovay-Strassen Algorithm
 def solovay_strassen(n):
     k = 128  # Number of checks
     for i in range(k):

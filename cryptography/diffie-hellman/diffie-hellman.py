@@ -1,11 +1,10 @@
 from tkinter import *
-import math
 import random
 import time
 import numpy as np
 
 
-# GCD (Euclid)
+# GCD (Euclid algorithm)
 def GCD(a, b):
     while b:
         t = a % b
@@ -95,7 +94,7 @@ def public_keygen(bit_length):
         last_digit = temp % 10
         if last_digit % 2 != 0:
             ans = solovay_strassen(temp)
-            if ans:  # Last condition for security improvement (and solovay_strassen((temp - 1) // 2))
+            if ans:
                 p = temp
                 break
 

@@ -1,9 +1,8 @@
 from tkinter import *
-import math
 import random
 
 
-# GCD (Euclid)
+# GCD (Euclid algorithm)
 def GCD(a, b):
     while b:
         t = a % b

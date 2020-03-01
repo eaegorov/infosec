@@ -127,6 +127,7 @@ def public_keygen(bit_length):
     return p, g
 
 
+# Mutual secret key generation
 def private_keygen(p, g):
     k = None
     a = random.randint(2, p - 1)

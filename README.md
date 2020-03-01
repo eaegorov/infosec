@@ -15,3 +15,4 @@ Cryptography:
 2. Solovay-Strassen test
 3. Diffie–Hellman protocol
 4. RC4 (stream cipher)
+5. rho-Pollard factorization algorithm

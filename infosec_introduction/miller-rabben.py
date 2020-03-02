@@ -18,27 +18,27 @@ def find_n_minus_1(n):
 
 # Algorithm
 def miller_rabben(n):
-    r = int(math.log2(n)) # Number of checkings
+    r = int(math.log2(n)) # Number of checks
     s, d = find_n_minus_1(n)
 
-    svid_prost = []
+    svid_prost = 0
     for i in range(r):
         a = random.randint(2, n - 2)
         x0 = fast_pow(a, d, n)
         if x0 == 1 or x0 == n - 1:
             print('{} - свидетель простоты. переходим к следующему а.'.format(a))
-            svid_prost.append(a)
+            svid_prost += 1
         else:
             x = [x0]
             for j in range(1, s):
                 x.append(fast_pow(x[j - 1], 2, n))
             if n - 1 in x:
                 print('{} - свидетель простоты. переходим к следующему а.'.format(a))
-                svid_prost.append(a)
+                svid_prost += 1
             else:
                 return 1
 
-    if len(svid_prost) == r:
+    if svid_prost == r:
         return 0
     else:
         return 0
@@ -47,7 +47,7 @@ def miller_rabben(n):
 
 # GUI
 def clicked_calc():
-    if (txt2.get is not None):
+    if txt2.get is not None:
         txt2.delete(0, 'end')
 
     n = txt1.get()
@@ -72,7 +72,7 @@ def clicked_bit():
                 break
 
 
-
+# GUI
 window = Tk()
 window.title('Task 4')
 window.geometry('640x220')

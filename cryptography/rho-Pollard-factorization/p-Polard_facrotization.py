@@ -143,7 +143,6 @@ class Application(Frame):
 
 if __name__ == '__main__':
     # GUI building
-    print(random.getrandbits(64))
     root = Tk()
     root.title("Rho-Pollard factorization")
     root.geometry("720x150")

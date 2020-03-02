@@ -92,6 +92,7 @@ def pollard(n):
     return gcd(n, abs(x - y))
 
 
+# Support even 128-bit numbers
 def pollard_factor(n):
     nums = []
 

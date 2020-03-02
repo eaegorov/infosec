@@ -1,7 +1,7 @@
 from tkinter import *
 import random
 import time
-import numpy as np
+import math
 
 
 # To binary representation converting
@@ -16,7 +16,7 @@ def to_bin(x):
 
 
 # GCD (Euclid algorithm)
-def GCD(a, b):
+def gcd(a, b):
     while b:
         t = a % b
         a = b
@@ -39,7 +39,7 @@ def fast_pow(a, b, n):
 
 # Jacobi symbol calculation
 def jacobi_symbol(a, b):
-    if GCD(a, b) != 1:
+    if gcd(a, b) != 1:
         return 0
     else:
         r = 1
@@ -71,7 +71,7 @@ def solovay_strassen(n):
     k = 128  # Number of checks
     for i in range(k):
         a = random.randint(2, n - 1)
-        if GCD(a, n) > 1:
+        if gcd(a, n) > 1:
             return False
         elif fast_pow(a, (n - 1) // 2, n) != jacobi_symbol(a, n) % n:
             return False
@@ -79,19 +79,75 @@ def solovay_strassen(n):
     return True
 
 
-# Factorization
-def factor(n):
-   ans = []
-   d = 2
-   while d * d <= n:
-       if n % d == 0:
-           ans.append(d)
-           n //= d
-       else:
-           d += 1
-   if n > 1:
-       ans.append(n)
-   return ans
+# n-1 representation for Millen-Rabben params
+def find_n_minus_1(n):
+    s = 0
+    d = n - 1
+
+    while d % 2 == 0:
+        d //= 2
+        s += 1
+
+    return s, d
+
+
+# Miller-Rabben Algorithm for Pollard factorization
+def miller_rabben(n):
+    if n == 2 or n == 3:
+        return True
+    r = int(math.log2(n))  # Number of checks
+    s, d = find_n_minus_1(n)
+
+    svid_prost = 0
+    for i in range(r):
+        a = random.randint(2, n - 2)
+        x0 = fast_pow(a, d, n)
+        if x0 == 1 or x0 == n - 1:
+            svid_prost += 1
+        else:
+            x = [x0]
+            for j in range(1, s):
+                x.append(fast_pow(x[j - 1], 2, n))
+            if n - 1 in x:
+                svid_prost += 1
+            else:
+                return False
+
+    if svid_prost == r:
+        return True
+    else:
+        return True
+
+
+# Rho-Pollard Algorithm for factorization
+def pollard(n):
+    x = random.randint(1, n - 1)
+    y = 1
+    i = 0
+    stage = 2
+    while gcd(n, abs(x - y)) == 1:
+        if i == stage:
+            y = x
+            stage *= 2
+
+        x = (x ** 2 + 1) % n
+        i += 1
+
+    return gcd(n, abs(x - y))
+
+
+def pollard_factor(n):
+    nums = []
+
+    while n > 1 and not miller_rabben(n):
+        d = pollard(n)
+        if miller_rabben(d) and n != d:
+            nums.append(d)
+            n //= d
+
+    nums.append(n)
+    nums.sort()
+    return nums
 
 
 # Public key and primitive element generation
@@ -105,13 +161,13 @@ def public_keygen(bit_length):
         last_digit = temp % 10
         if last_digit % 2 != 0:
             ans = solovay_strassen(temp)
-            if ans:
+            if ans:  # Last condition for security improvement (and solovay_strassen((temp - 1) // 2))
                 p = temp
                 break
 
     # Finding primitive element of a finite filed GF(p)
     # start_time = time.process_time()
-    prime_factors = np.unique(factor(p - 1))
+    prime_factors = pollard_factor(p - 1)  # Factorization
     for a in range(2, p):
         check = True
         for q in prime_factors:
@@ -123,7 +179,7 @@ def public_keygen(bit_length):
             g = a
             break
 
-    #delta = time.process_time() - start_time
+    # delta = time.process_time() - start_time
     return p, g
 
 

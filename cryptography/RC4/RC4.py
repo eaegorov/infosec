@@ -1,6 +1,7 @@
 from tkinter import *
 import random
 import numpy as np
+import math
 
 
 # To binary representation converting
@@ -34,6 +35,76 @@ def fast_pow(a, b, n):
             a_numbers.append(((a_numbers[i - 1] ** 2) * a_numbers[0]) % n)
 
     return a_numbers[-1]
+
+# n-1 representation for Millen-Rabben params
+def find_n_minus_1(n):
+    s = 0
+    d = n - 1
+
+    while d % 2 == 0:
+        d //= 2
+        s += 1
+
+    return s, d
+
+
+# Miller-Rabben Algorithm for Pollard factorization
+def miller_rabben(n):
+    if n == 2 or n == 3:
+        return True
+    r = int(math.log2(n))  # Number of checks
+    s, d = find_n_minus_1(n)
+
+    svid_prost = 0
+    for i in range(r):
+        a = random.randint(2, n - 2)
+        x0 = fast_pow(a, d, n)
+        if x0 == 1 or x0 == n - 1:
+            svid_prost += 1
+        else:
+            x = [x0]
+            for j in range(1, s):
+                x.append(fast_pow(x[j - 1], 2, n))
+            if n - 1 in x:
+                svid_prost += 1
+            else:
+                return False
+
+    if svid_prost == r:
+        return True
+    else:
+        return True
+
+
+# Rho-Pollard Algorithm for factorization
+def pollard(n):
+    x = random.randint(1, n - 1)
+    y = 1
+    i = 0
+    stage = 2
+    while gcd(n, abs(x - y)) == 1:
+        if i == stage:
+            y = x
+            stage *= 2
+
+        x = (x ** 2 + 1) % n
+        i += 1
+
+    return gcd(n, abs(x - y))
+
+
+def pollard_factor(n):
+    nums = []
+
+    while n > 1 and not miller_rabben(n):
+        d = pollard(n)
+        if miller_rabben(d) and n != d:
+            nums.append(d)
+            n //= d
+
+    nums.append(n)
+    nums.sort()
+    return nums
 
 
 # Jacobi symbol calculation
@@ -78,21 +149,6 @@ def solovay_strassen(n):
     return True
 
 
-# Factorization
-def factor(n):
-   ans = []
-   d = 2
-   while d * d <= n:
-       if n % d == 0:
-           ans.append(d)
-           n //= d
-       else:
-           d += 1
-   if n > 1:
-       ans.append(n)
-   return ans
-
-
 # Public key and primitive element generation
 def public_keygen(bit_length):
     p = None
@@ -109,7 +165,7 @@ def public_keygen(bit_length):
                 break
 
     # Finding primitive element of a finite filed GF(p)
-    prime_factors = np.unique(factor(p - 1))
+    prime_factors = pollard_factor(p - 1)
     for a in range(2, p):
         check = True
         for q in prime_factors:
@@ -193,15 +249,6 @@ def decode(cipher, bits_number, key):
     decoded_message = encode(cipher, bits_number, key)
 
     return decoded_message
-
-
-# def RC4(text):
-#     bits_number = 64
-#     p, g = public_keygen(bits_number)
-#     k = private_keygen(p, g)
-#
-#     cipher = encode(text, bits_number, k)
-#     decoded_cipher = decode(cipher, bits_number, k)
 
 
 # GUI
